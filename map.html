@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa symulacji</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mapa tras i lokalizacji zwierząt</h1>
+    <canvas id="mapCanvas"></canvas>
+    <div id="weatherDataContainer">
+        <h2>Stacje pogodowe</h2>
+        <table id="weatherTable" border="1">
+            <thead>
+                <tr>
+                    <th>Identyfikator</th>
+                    <th>Czas</th>
+                    <th>Temperatura (°C)</th>
+                    <th>Wiatr (km/h)</th>
+                    <th>Mgła</th>
+                    <th>Deszcz (mm)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Wiersze będą generowane dynamicznie -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const mapImageSrc = "krakow.png";
+
+        // Funkcja do rysowania punktów
+        function drawPoint(ctx, x, y, color = "red", radius = 5, label = "") {
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.closePath();
+
+            // Dodaj etykiety do punktów
+            if (label) {
+                ctx.font = "12px Arial";
+                ctx.fillStyle = "black";
+                ctx.fillText(label, x + radius + 2, y);
+            }
+        }
+
+        // Funkcja do rysowania tras (linii między punktami)
+        function drawLine(ctx, points, color = "red", width = 4) {
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = width;
+
+            ctx.moveTo(points[0].longitude, points[0].latitude);
+            points.forEach(point => {
+                ctx.lineTo(point.longitude, point.latitude);
+            });
+
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+        // Funkcja do rysowania mapy
+        async function drawMap() {
+            const canvas = document.getElementById("mapCanvas");
+            const ctx = canvas.getContext("2d");
+
+            const mapImage = new Image();
+            mapImage.src = mapImageSrc;
+            await new Promise(resolve => mapImage.onload = resolve);
+
+            canvas.width = mapImage.width;
+            canvas.height = mapImage.height;
+
+            ctx.drawImage(mapImage, 0, 0);
+
+            // Wczytaj dane statyczne z map_sample.json
+            const staticData = {"mapName": "The Tatra Mountains TEST 20", "routes": [{"points": [{"longitude": 1206.0, "latitude": 486.0, "point": 1}, {"longitude": 1192.0, "latitude": 488.0, "point": 2}, {"longitude": 1182.0, "latitude": 480.0, "point": 3}, {"longitude": 1165.0, "latitude": 484.0, "point": 4}, {"longitude": 1152.0, "latitude": 490.0, "point": 5}, {"longitude": 1120.0, "latitude": 476.0, "point": 6}, {"longitude": 1095.0, "latitude": 484.0, "point": 7}, {"longitude": 1095.0, "latitude": 496.0, "point": 8}, {"longitude": 1068.0, "latitude": 507.0, "point": 9}, {"longitude": 1057.0, "latitude": 504.0, "point": 10}, {"longitude": 1054.0, "latitude": 486.0, "point": 11}, {"longitude": 1038.0, "latitude": 486.0, "point": 12}, {"longitude": 1031.0, "latitude": 475.0, "point": 13}, {"longitude": 1015.0, "latitude": 483.0, "point": 14}, {"longitude": 1018.0, "latitude": 499.0, "point": 15}, {"longitude": 1019.0, "latitude": 515.0, "point": 16}, {"longitude": 1011.0, "latitude": 513.0, "point": 17}, {"longitude": 1004.0, "latitude": 493.0, "point": 18}, {"longitude": 1004.0, "latitude": 482.0, "point": 19}, {"longitude": 1004.0, "latitude": 472.0, "point": 20}, {"longitude": 999.0, "latitude": 472.0, "point": 21}, {"longitude": 995.0, "latitude": 481.0, "point": 22}, {"longitude": 995.0, "latitude": 489.0, "point": 23}, {"longitude": 999.0, "latitude": 504.0, "point": 24}, {"longitude": 1002.0, "latitude": 520.0, "point": 25}, {"longitude": 990.0, "latitude": 509.0, "point": 26}, {"longitude": 983.0, "latitude": 499.0, "point": 27}, {"longitude": 973.0, "latitude": 501.0, "point": 28}, {"longitude": 976.0, "latitude": 514.0, "point": 29}, {"longitude": 983.0, "latitude": 530.0, "point": 30}, {"longitude": 991.0, "latitude": 539.0, "point": 31}, {"longitude": 995.0, "latitude": 557.0, "point": 32}, {"longitude": 995.0, "latitude": 573.0, "point": 33}, {"longitude": 992.0, "latitude": 591.0, "point": 34}, {"longitude": 990.0, "latitude": 605.0, "point": 35}, {"longitude": 984.0, "latitude": 622.0, "point": 36}, {"longitude": 994.0, "latitude": 638.0, "point": 37}, {"longitude": 1003.0, "latitude": 646.0, "point": 38}, {"longitude": 1011.0, "latitude": 659.0, "point": 39}, {"longitude": 1004.0, "latitude": 668.0, "point": 40}, {"longitude": 995.0, "latitude": 676.0, "point": 41}, {"longitude": 992.0, "latitude": 676.0, "point": 42}], "number": 1, "difficulty": 3, "color": "Red", "isEntrance": true, "spawn_chance": 2}, {"points": [{"longitude": 992.0, "latitude": 675.0, "point": 1}, {"longitude": 976.0, "latitude": 674.0, "point": 2}, {"longitude": 964.0, "latitude": 649.0, "point": 3}, {"longitude": 929.0, "latitude": 639.0, "point": 4}, {"longitude": 911.0, "latitude": 649.0, "point": 5}, {"longitude": 856.0, "latitude": 599.0, "point": 6}], "number": 2, "difficulty": 2, "color": "Blue", "isEntrance": false}, {"points": [{"longitude": 854.0, "latitude": 601.0, "point": 12}, {"longitude": 858.0, "latitude": 573.0, "point": 11}, {"longitude": 841.0, "latitude": 548.0, "point": 10}, {"longitude": 861.0, "latitude": 558.0, "point": 9}, {"longitude": 891.0, "latitude": 554.0, "point": 8}, {"longitude": 904.0, "latitude": 559.0, "point": 7}, {"longitude": 916.0, "latitude": 570.0, "point": 6}, {"longitude": 916.0, "latitude": 556.0, "point": 5}, {"longitude": 898.0, "latitude": 546.0, "point": 4}, {"longitude": 883.0, "latitude": 539.0, "point": 3}, {"longitude": 873.0, "latitude": 522.0, "point": 2}, {"longitude": 854.0, "latitude": 489.0, "point": 1}], "number": 3, "difficulty": 4, "color": "Black", "isEntrance": false}, {"points": [{"longitude": 851.0, "latitude": 600.0, "point": 1}, {"longitude": 827.0, "latitude": 598.0, "point": 2}, {"longitude": 796.0, "latitude": 589.0, "point": 3}, {"longitude": 768.0, "latitude": 570.0, "point": 4}, {"longitude": 765.0, "latitude": 550.0, "point": 5}, {"longitude": 764.0, "latitude": 530.0, "point": 6}, {"longitude": 753.0, "latitude": 526.0, "point": 7}, {"longitude": 735.0, "latitude": 541.0, "point": 8}, {"longitude": 746.0, "latitude": 553.0, "point": 9}, {"longitude": 746.0, "latitude": 564.0, "point": 10}, {"longitude": 735.0, "latitude": 569.0, "point": 11}, {"longitude": 726.0, "latitude": 574.0, "point": 12}, {"longitude": 709.0, "latitude": 572.0, "point": 13}, {"longitude": 699.0, "latitude": 582.0, "point": 14}, {"longitude": 690.0, "latitude": 579.0, "point": 15}, {"longitude": 683.0, "latitude": 570.0, "point": 16}, {"longitude": 671.0, "latitude": 574.0, "point": 17}, {"longitude": 665.0, "latitude": 572.0, "point": 18}, {"longitude": 648.0, "latitude": 580.0, "point": 19}, {"longitude": 626.0, "latitude": 574.0, "point": 20}], "number": 4, "difficulty": 2, "color": "Blue", "isEntrance": false}, {"points": [{"longitude": 565.0, "latitude": 680.0, "point": 1}, {"longitude": 564.0, "latitude": 669.0, "point": 2}, {"longitude": 589.0, "latitude": 655.0, "point": 3}, {"longitude": 612.0, "latitude": 630.0, "point": 4}, {"longitude": 624.0, "latitude": 617.0, "point": 5}, {"longitude": 616.0, "latitude": 591.0, "point": 6}, {"longitude": 628.0, "latitude": 572.0, "point": 7}], "number": 5, "difficulty": 1, "color": "Black", "isEntrance": true, "spawn_chance": 2}, {"points": [{"longitude": 455.0, "latitude": 512.0, "point": 1}, {"longitude": 469.0, "latitude": 505.0, "point": 2}, {"longitude": 490.0, "latitude": 539.0, "point": 3}, {"longitude": 501.0, "latitude": 512.0, "point": 4}, {"longitude": 522.0, "latitude": 534.0, "point": 5}, {"longitude": 540.0, "latitude": 513.0, "point": 6}, {"longitude": 583.0, "latitude": 515.0, "point": 7}, {"longitude": 580.0, "latitude": 531.0, "point": 8}, {"longitude": 587.0, "latitude": 532.0, "point": 9}, {"longitude": 605.0, "latitude": 537.0, "point": 10}, {"longitude": 616.0, "latitude": 534.0, "point": 11}, {"longitude": 624.0, "latitude": 568.0, "point": 12}, {"longitude": 627.0, "latitude": 573.0, "point": 13}], "number": 6, "difficulty": 4, "color": "Yellow", "isEntrance": false}, {"points": [{"longitude": 352.0, "latitude": 413.0, "point": 1}, {"longitude": 392.0, "latitude": 362.0, "point": 2}, {"longitude": 396.0, "latitude": 392.0, "point": 3}, {"longitude": 422.0, "latitude": 399.0, "point": 4}, {"longitude": 427.0, "latitude": 415.0, "point": 5}, {"longitude": 435.0, "latitude": 415.0, "point": 6}, {"longitude": 447.0, "latitude": 424.0, "point": 7}, {"longitude": 464.0, "latitude": 446.0, "point": 8}, {"longitude": 483.0, "latitude": 447.0, "point": 9}, {"longitude": 495.0, "latitude": 444.0, "point": 10}, {"longitude": 509.0, "latitude": 463.0, "point": 11}, {"longitude": 524.0, "latitude": 478.0, "point": 12}, {"longitude": 540.0, "latitude": 474.0, "point": 13}, {"longitude": 553.0, "latitude": 479.0, "point": 14}, {"longitude": 566.0, "latitude": 488.0, "point": 15}, {"longitude": 585.0, "latitude": 489.0, "point": 16}, {"longitude": 593.0, "latitude": 467.0, "point": 17}, {"longitude": 611.0, "latitude": 495.0, "point": 18}, {"longitude": 628.0, "latitude": 509.0, "point": 19}, {"longitude": 626.0, "latitude": 553.0, "point": 20}, {"longitude": 629.0, "latitude": 576.0, "point": 21}], "number": 7, "difficulty": 4, "color": "Blue", "isEntrance": true, "spawn_chance": 2}], "detectors": [{"detectorNumber": 1, "coordinates": {"longitude": 946.0, "latitude": 408.0}}, {"detectorNumber": 2, "coordinates": {"longitude": 702.0, "latitude": 496.0}}, {"detectorNumber": 3, "coordinates": {"longitude": 384.0, "latitude": 508.0}}, {"detectorNumber": 4, "coordinates": {"longitude": 499.0, "latitude": 145.0}}], "btsStations": [{"stationNumber": 1, "coordinates": {"longitude": 369.0, "latitude": 182.0}}, {"stationNumber": 2, "coordinates": {"longitude": 687.0, "latitude": 282.0}}, {"stationNumber": 3, "coordinates": {"longitude": 591.0, "latitude": 554.0}}, {"stationNumber": 4, "coordinates": {"longitude": 1151.0, "latitude": 190.0}}], "specialPlaces": [{"placeNumber": 1, "coordinates": {"longitude": 994.0, "latitude": 545.0}, "radius": 30.0}, {"placeNumber": 2, "coordinates": {"longitude": 886.0, "latitude": 554.0}, "radius": 30.0}], "rasterMap": {"topLeftLatLon": {"a": 12.3, "b": 32.1}, "downRightLatLon": {"a": 12.4, "b": 32.2}, "canvasWidthHeight": {"a": 1280.0, "b": 700.0}}};
+            staticData.routes.forEach(route => {
+                const points = route.points;
+                const lineColor = route.color;
+
+                drawLine(ctx, points, lineColor, 4); // Rysowanie linii
+                points.forEach(point => {
+                    drawPoint(ctx, point.longitude, point.latitude, "red", 3, route.animalId); // Rysowanie punktów
+                });
+            });
+
+            // Rysowanie detektorów
+            staticData.detectors.forEach(detector => {
+                drawPoint(ctx, detector.coordinates.longitude, detector.coordinates.latitude, "blue", 5);
+            });
+
+            // Rysowanie stacji BTS
+            staticData.btsStations.forEach(station => {
+                drawPoint(ctx, station.coordinates.longitude, station.coordinates.latitude, "green", 5);
+            });
+
+            // Rysowanie miejsc specjalnych
+            staticData.specialPlaces.forEach(place => {
+                const x = place.coordinates.longitude;
+                const y = place.coordinates.latitude;
+                const radius = place.radius;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, 2 * Math.PI);
+                ctx.strokeStyle = "yellow";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.closePath();
+            });
+
+            // Wczytaj dane dynamiczne z plików JSON
+            const locationsResponse = await fetch("animal_locations.json");
+            const routesResponse = await fetch("animal_routes.json");
+
+            const animalLocations = await locationsResponse.json();
+            const animalRoutes = await routesResponse.json();
+
+            const locationsResponseT = await fetch("tourist_location.json");
+            const touristLocations = await locationsResponseT.json();
+
+            // Rysowanie lokalizacji zwierząt
+            animalLocations.forEach(location => {
+                drawPoint(ctx, parseFloat(location.location.longitude), parseFloat(location.location.latitude), "blue", 5, location.animalId);
+            });
+
+            // Rysowanie lokalizacji turystów
+            touristLocations.forEach(location => {
+                drawPoint(ctx, parseFloat(location.location.longitude), parseFloat(location.location.latitude), "red", 5, location.PhoneId);
+            });
+
+            // Rysowanie tras zwierząt
+            animalRoutes.forEach(route => {
+                const points = route.route.map(r => ({
+                    longitude: parseFloat(r.location.longitude),
+                    latitude: parseFloat(r.location.latitude)
+                }));
+                drawLine(ctx, points, "green", 2);
+                points.forEach(point => {
+                    drawPoint(ctx, point.longitude, point.latitude, "yellow", 4, route.animalId);
+                });
+            });
+        }
+
+        // Funkcja do załadowania danych pogodowych i uzupełnienia tabeli
+async function populateWeatherTable() {
+    const response = await fetch("weather_data.json");
+    const weatherData = await response.json();
+
+    const tableBody = document.querySelector("#weatherTable tbody");
+    tableBody.innerHTML = ""; // Wyczyść zawartość tabeli przed aktualizacją
+
+    weatherData.forEach(station => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+        <td>${station.detectorNumber}</td>
+        <td>${station.coordinates.latitude}, ${station.coordinates.longitude}</td>
+        <td>${station.weather.temperature}</td>
+        <td>${station.weather.wind}</td>
+        <td>${station.weather.fog}</td>
+        <td>${station.weather.rain}</td>
+    `;
+
+        tableBody.appendChild(row);
+    });
+}
+
+// Wywołanie funkcji przy ładowaniu strony
+populateWeatherTable();
+setInterval(populateWeatherTable, 10000); // Aktualizacja danych co 10 sekund
+
+
+        // Aktualizacja mapy co 10 sekund
+        drawMap();
+        setInterval(drawMap, 10000);
+    </script>
+</body>
+</html>

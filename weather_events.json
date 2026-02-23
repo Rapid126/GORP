@@ -1,0 +1,20 @@
+[
+    {
+        "minute": 23,
+        "detectorNumber": "2",
+        "temperature": -10.0,
+        "wind": 90.0,
+        "fog": 9.0,
+        "rain": 95.0,
+        "added": "2025-04-07 15:31:00",
+        "detectors": [
+            {
+                "detectorNumber": 2,
+                "coordinates": {
+                    "longitude": 165.0,
+                    "latitude": 274.0
+                }
+            }
+        ]
+    }
+]

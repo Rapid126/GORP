@@ -1,0 +1,20 @@
+{
+  "time_multiplier": 25,
+  "start_time": "2025-05-25 05:00:00",
+  "duration_hours": 10,
+  "animals": [
+    {
+      "type": "jelen",
+      "route_number": 0,
+      "start_longitude": null,
+      "start_latitude": null
+    },
+    {
+      "type": "jelen",
+      "route_number": 0,
+      "start_longitude": null,
+      "start_latitude": null
+    }
+  ],
+  "num_animals": 2
+}

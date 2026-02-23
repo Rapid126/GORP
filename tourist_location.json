@@ -1,0 +1,72 @@
+[
+    {
+        "title": "touristLocation",
+        "PhoneId": "+48863572107",
+        "locType": "BTS",
+        "timeStamp": "2025-05-25 05:16:20.000000",
+        "location": {
+            "longitude": "616.0",
+            "latitude": "591.0"
+        }
+    },
+    {
+        "title": "touristLocation",
+        "PhoneId": "+48573530097",
+        "locType": "GPS",
+        "timeStamp": "2025-05-25 05:16:20.000000",
+        "location": {
+            "longitude": "611.0",
+            "latitude": "495.0"
+        }
+    },
+    {
+        "title": "touristLocation",
+        "PhoneId": "+48213156167",
+        "locType": "GPS",
+        "timeStamp": "2025-05-25 05:16:20.000000",
+        "location": {
+            "longitude": "557.7787370816122",
+            "latitude": "513.8269180037959"
+        }
+    },
+    {
+        "title": "touristLocation",
+        "PhoneId": "+48595652129",
+        "locType": "GPS",
+        "timeStamp": "2025-05-25 05:16:20.000000",
+        "location": {
+            "longitude": "601.8059751613625",
+            "latitude": "645.7931868793019"
+        }
+    },
+    {
+        "title": "touristLocation",
+        "PhoneId": "+48522456219",
+        "locType": "GPS",
+        "timeStamp": "2025-05-25 05:16:20.000000",
+        "location": {
+            "longitude": "390.87597426430165",
+            "latitude": "363.4331328130154"
+        }
+    },
+    {
+        "title": "touristLocation",
+        "PhoneId": "+48650580395",
+        "locType": "GPS",
+        "timeStamp": "2025-05-25 05:16:20.000000",
+        "location": {
+            "longitude": "610.8219174268702",
+            "latitude": "631.2805245360107"
+        }
+    },
+    {
+        "title": "touristLocation",
+        "PhoneId": "+48398651127",
+        "locType": "BTS",
+        "timeStamp": "2025-05-25 05:16:20.000000",
+        "location": {
+            "longitude": "1152.0",
+            "latitude": "490.0"
+        }
+    }
+]

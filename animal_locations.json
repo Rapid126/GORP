@@ -1,0 +1,14 @@
+[
+    {
+        "animal_id": "jelen-0001",
+        "longitude": 403.532594962147,
+        "latitude": 701.8205287533134,
+        "simulated_timestamp": "2025-05-25 05:16:20.000000"
+    },
+    {
+        "animal_id": "jelen-0002",
+        "longitude": 247.32382872820443,
+        "latitude": 148.89231410435542,
+        "simulated_timestamp": "2025-05-25 05:16:20.000000"
+    }
+]

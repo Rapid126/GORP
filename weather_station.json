@@ -1,0 +1,15 @@
+[
+    {
+        "title": "WS",
+        "stationId": "station-0002",
+        "timeStamp": "2020-11-08 00:16:00.000000",
+        "location": {
+            "longitude": "165.0",
+            "latitude": "274.0"
+        },
+        "wind": "93.82",
+        "fog": "9.7",
+        "temperature": "-9.88",
+        "rain": "86.67"
+    }
+]
